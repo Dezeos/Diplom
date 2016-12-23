@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Diplom</string>
+
+    <string name="tvEMAIL">e-mail</string>
+    <string name="tvPASS">password</string>
+    <string name="tvGROUP">group</string>
+    <string name="btnLOGIN">LOGIN</string>
+    <string name="tvGroupBeacons">Group Beacons :</string>
+    <string name="bSAVE">SAVE</string>
+
+
+</resources>
