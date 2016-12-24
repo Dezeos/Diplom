@@ -41,7 +41,7 @@ public class Elements_DB extends AppCompatActivity {
             Log.i(TAG, String.valueOf(im_btn.getId()));
             TextView tvPOS = (TextView) item.findViewById(R.id.tvPOS);
             tvPOS.setText(Integer.toString(i+1));
-            TextView tvNAME = (TextView) item.findViewById(R.id.tvNAME);
+            final TextView tvNAME = (TextView) item.findViewById(R.id.tvNAME);
             tvNAME.setText(name);
             TextView tvDESCR = (TextView) item.findViewById(R.id.tvDESCR);
             tvDESCR.setText(description);
@@ -49,7 +49,18 @@ public class Elements_DB extends AppCompatActivity {
 
             linearLayout.addView(item);
 
+            im_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i(TAG, String.valueOf(v.getId()));
+                    Intent intent2 = new Intent(Elements_DB.this, Redact_Activity.class);
+                    intent2.putExtra("Description",tvNAME.getText().toString());
+                    startActivity(intent2);
+                }
+            });
+
         }
+
 
 
 
