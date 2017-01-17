@@ -32,4 +32,7 @@ public interface Link {
     Call<ArrayList<Unswer>> getGroups();;
 
 
+    @GET("smart-city/categories")
+    Call<ArrayList<Unswer>> getGroups2();
+
 }

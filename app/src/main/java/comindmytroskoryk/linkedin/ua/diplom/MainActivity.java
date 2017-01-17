@@ -9,8 +9,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
 
     String AUNT_KEY = "";
 
+    ArrayList<String> groups_list = new ArrayList<String>();;
+    ArrayList<Unswer> ui;
+    String[] data ;
+
     private static final String URL = "http://labo-pbei.no-ip.org:10001/";
     private Gson gson = new GsonBuilder().create();
     Retrofit retrofit = new Retrofit.Builder()
@@ -60,6 +68,11 @@ public class MainActivity extends AppCompatActivity {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build();
     Link link = retrofit.create(Link.class);
+
+    int count = 0;
+
+    DB db;
+
 
 
     @Override
@@ -74,11 +87,35 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        bLOGIN.setOnClickListener(new View.OnClickListener() {
+        final Call<ArrayList<Unswer>> call1 = link.getGroups2();
+        call1.enqueue(new Callback<ArrayList<Unswer>>() {
+            @Override
+            public void onResponse(retrofit.Response<ArrayList<Unswer>> response227, Retrofit retrofit) {
+
+                ui = response227.body();
+
+                for (Unswer s:ui) {
+
+                    groups_list.add(String.valueOf(s.getFirstName()));
+                }
+
+                set_group_name(groups_list);
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+
+
+
+            bLOGIN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
+/*
 
                 Call<User> call = link.authentication(etEMAIL.getText().toString(),etPASS.getText().toString());
                 call.enqueue(new Callback<User>() {
@@ -106,11 +143,25 @@ public class MainActivity extends AppCompatActivity {
                     public void onFailure(Throwable t) {
 
                     }
-                });
+                });*/
 
             }
         });
 
+    }
+
+    public void set_group_name (ArrayList<String> names){
+        // адаптер
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,names );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setNotifyOnChange(true);
+
+        Spinner spinner = (Spinner) findViewById(R.id.sGROUPS);
+        spinner.setAdapter(adapter);
+        // заголовок
+        spinner.setPrompt("Select the required group");
+        // выделяем элемент
+        spinner.setSelection(1);
     }
 
 
