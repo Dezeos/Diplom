@@ -5,13 +5,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.util.ArrayList;
 
 /**
  * Created by Dem on 16.01.2017.
  */
 public class DB {
 
-
+    // Переменные для хранения названия БД, таблицы, столбцов, версии БД и строки создания БД
     private static final String DB_NAME = "Diplom_DB";
     private static final int DB_VERSION = 1;
     private static final String DB_TABLE = "Diplom_TABLE";
@@ -21,37 +24,45 @@ public class DB {
     public static final String COLUMN_DESCRIPTION = "description";
 
     private static final String DB_CREATE =
-            "create table " + DB_TABLE + "(" +
+                    "create table " + DB_TABLE + "(" +
                     COLUMN_ID + " integer primary key, " +
                     COLUMN_TITLE + " title, " + COLUMN_DESCRIPTION + " description" + ");";
+    //
 
-
+    // Объекты для работы с БД
     private DBHelper mDBHelper;
     private SQLiteDatabase mDB;
-
     private final Context mCtx;
+    private ArrayList<Unswer> get_unswer = new ArrayList<>();
+    ContentValues cv;
+    //
 
-    public DB(Context mCtx) {
+    // Конструктор
+    public DB(Context mCtx, ArrayList<Unswer> ui) {
+        get_unswer = ui;
         this.mCtx = mCtx;
     }
 
-    // открыть подключение
+    // Открыть подключение к БД
     public void open() {
         mDBHelper = new DBHelper(mCtx, DB_NAME, null, DB_VERSION);
         mDB = mDBHelper.getWritableDatabase();
     }
+    //
 
-    // закрыть подключение
+    // Закрыть подключение
     public void close() {
         if (mDBHelper!=null) mDBHelper.close();
     }
+    //
 
-    // получить все данные из таблицы DB_TABLE
+    // Получить все данные из таблицы DB_TABLE
     public Cursor getAllData() {
         return mDB.query(DB_TABLE, null, null, null, null, null, null);
     }
+    //
 
-    // класс по созданию и управлению БД
+    // Вложенный класс по созданию и управлению БД
     private class DBHelper extends SQLiteOpenHelper {
 
         public DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory,
@@ -59,22 +70,21 @@ public class DB {
             super(context, name, factory, version);
         }
 
-        // создаем и заполняем БД
+        // Создаем БД и заполняем ее полученными данными
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(DB_CREATE);
-/*
-            ContentValues cv = new ContentValues();
-            for (int i = 1; i < 5; i++) {
-                cv.put(COLUMN_ID, i);
-                cv.put(COLUMN_TITLE,"");
-                cv.put(COLUMN_DESCRIPTION, " ");
-                db.insert(DB_TABLE, null, cv);
-            }*/
+            for (Unswer in : get_unswer) {
+                cv.put(COLUMN_ID, Integer.parseInt(String.valueOf(in.getId())));
+                cv.put(COLUMN_TITLE,in.getFirstName());
+                cv.put(COLUMN_DESCRIPTION, in.getUuid());
+                db.insert(DB_TABLE,null,cv);
+            }
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         }
     }
+    //
 }

@@ -1,15 +1,13 @@
 package comindmytroskoryk.linkedin.ua.diplom;
 
-import com.google.gson.annotations.SerializedName;
+
 
 import java.util.ArrayList;
-
 import retrofit.Call;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
-import rx.Observable;
 
 /**
  * Created by Dem on 16.01.2017.
