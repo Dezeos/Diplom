@@ -26,8 +26,11 @@ public class MainActivity extends AppCompatActivity {
     EditText etEMAIL;
     EditText etPASS;
     Button bLOGIN;
+    Spinner sGROUP;
 
-    String AUNT_KEY = "";
+    public static String API_KEY = "";
+    String email = "";
+    String passord = "";
 
     ArrayList<String> groups_list = new ArrayList<String>();
     ArrayList<Unswer> ui = new ArrayList<Unswer>();
@@ -54,11 +57,30 @@ public class MainActivity extends AppCompatActivity {
 
         etEMAIL = (EditText) findViewById(R.id.etEMAIL);
         etPASS = (EditText) findViewById(R.id.etPASS);
+        sGROUP = (Spinner) findViewById(R.id.sGROUPS);
         bLOGIN = (Button)findViewById(R.id.bLOGIN);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+        set_spiner_items();
+        Log.d("LOGO",  " 1 response.body() = " +  API_KEY);
+
+            bLOGIN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                get_api_key(etEMAIL.getText().toString(),etPASS.getText().toString());
+
+
+            }
+        });
+
+        Log.d("LOGO",  " 4 response.body() = " +  API_KEY);
+
+    }
+
+    public void set_spiner_items(){
         final Call<ArrayList<Unswer>> call1 = link.getGroups2();
         call1.enqueue(new Callback<ArrayList<Unswer>>() {
             @Override
@@ -86,67 +108,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
-
-            bLOGIN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                c = db.getAllData();
-
-                if (c.moveToFirst()) {
-
-                    // определяем номера столбцов по имени в выборке
-                    int idColIndex = c.getColumnIndex("id");
-                    int nameColIndex = c.getColumnIndex("name");
-                    int emailColIndex = c.getColumnIndex("email");
-
-                    do {
-                        // получаем значения по номерам столбцов и пишем все в лог
-                        Log.d("LOGO",
-                                "ID = " + c.getInt(idColIndex) +
-                                        ", name = " + c.getString(nameColIndex) +
-                                        ", email = " + c.getString(emailColIndex));
-                        // переход на следующую строку
-                        // а если следующей нет (текущая - последняя), то false - выходим из цикла
-                    } while (c.moveToNext());
-                } else
-                    Log.d("LOGO", "0 rows");
-/*
-                Call<User> call = link.authentication(etEMAIL.getText().toString(),etPASS.getText().toString());
-                call.enqueue(new Callback<User>() {
-                    @Override
-                    public void onResponse(retrofit.Response<User> response, Retrofit retrofit) {
-
-                        AUNT_KEY = String.valueOf(response.body());
-                        Log.d("LOGO",  AUNT_KEY);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-
-                    }
-                });
-
-                Call<ArrayList<Unswer>> call1 = link.getGroups();
-                call1.enqueue(new Callback<ArrayList<Unswer>>() {
-                    @Override
-                    public void onResponse(retrofit.Response<ArrayList<Unswer>> response228, Retrofit retrofit) {
-                        Log.d("LOGO", response228.body()+ response228.message() + response228.code());
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-
-                    }
-                });*/
-
-            }
-        });
-
     }
+
 
     public void set_group_name (ArrayList<String> names){
         // адаптер для віпадающего списка групп
@@ -160,6 +123,64 @@ public class MainActivity extends AppCompatActivity {
         spinner.setPrompt("Select the required group");
         // выделяем элемент списка групп  по умолчанию
         spinner.setSelection(1);
+    }
+
+    public void get_api_key(String email, String password){
+        Call<User> call = link.authentication(email,password);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(retrofit.Response<User> response, Retrofit retrofit) {
+
+                API_KEY = response.body().getApi_key() ;
+
+                Log.d("LOGO",  " 2 response.body() = " +  API_KEY);
+
+                save_api_key(API_KEY);
+
+                get_beacons_description(API_KEY);
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+
+        Log.d("LOGO",  " 3 response.body() = " +  API_KEY);
+
+    }
+
+
+    public void get_beacons_description(String api_key){
+
+        Call<ArrayList<Unswer>> call1 = link.getGroups("maintain-api/beacons?api_key=" + api_key);
+        call1.enqueue(new Callback<ArrayList<Unswer>>() {
+            @Override
+            public void onResponse(retrofit.Response<ArrayList<Unswer>> response228, Retrofit retrofit) {
+
+
+                    Log.d("LOGO", "Get unswer " +  String.valueOf(response228.body()));
+                for (Unswer s:response228.body()) {
+                    if ((sGROUP.getSelectedItem().toString()).equals(s.getGroupName()))
+                    Log.d("LOGO", "Get unswer " +  String.valueOf(s));
+                }
+
+
+
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+    }
+
+
+    public void save_api_key(String api_key){
+        API_KEY = api_key;
     }
 
 
