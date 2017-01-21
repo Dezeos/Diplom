@@ -29,12 +29,12 @@ public class MainActivity extends AppCompatActivity {
     Spinner sGROUP;
 
     public static String API_KEY = "";
-    String email = "";
-    String passord = "";
+
 
     ArrayList<String> groups_list = new ArrayList<String>();
     ArrayList<Unswer> ui = new ArrayList<Unswer>();
-    String[] data ;
+    ArrayList<Unswer> needs = new ArrayList<>();
+
 
     private static final String URL = "http://labo-pbei.no-ip.org:10001/";
     private Gson gson = new GsonBuilder().create();
@@ -59,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
         etPASS = (EditText) findViewById(R.id.etPASS);
         sGROUP = (Spinner) findViewById(R.id.sGROUPS);
         bLOGIN = (Button)findViewById(R.id.bLOGIN);
+
+        db = new DB(MainActivity.this);
+        db.open();
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -90,16 +93,11 @@ public class MainActivity extends AppCompatActivity {
 
                 for (Unswer s : ui) {
 
+
                     groups_list.add(String.valueOf(s.getFirstName()));
                 }
 
                 set_group_name(groups_list);
-
-                db = new DB(MainActivity.this, ui);
-
-                db.open();
-
-
 
             }
 
@@ -159,15 +157,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(retrofit.Response<ArrayList<Unswer>> response228, Retrofit retrofit) {
 
-
                     Log.d("LOGO", "Get unswer " +  String.valueOf(response228.body()));
                 for (Unswer s:response228.body()) {
-                    if ((sGROUP.getSelectedItem().toString()).equals(s.getGroupName()))
+                    if ((sGROUP.getSelectedItem().toString()).equals(s.getGroupName())) {
+                        needs.add(s);
+                    }
+
                     Log.d("LOGO", "Get unswer " +  String.valueOf(s));
                 }
 
 
 
+                db.write_DB(needs);
 
             }
 
@@ -190,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
         c.close();
         db.close();
     }
+
 
 
 

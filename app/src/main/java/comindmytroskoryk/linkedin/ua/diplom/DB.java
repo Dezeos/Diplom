@@ -25,7 +25,7 @@ public class DB {
 
     private static final String DB_CREATE =
                     "create table " + DB_TABLE + "(" +
-                    COLUMN_ID + " integer primary key, " +
+                    COLUMN_ID + " integer primary key autoincrement, " +
                     COLUMN_TITLE + " title, " + COLUMN_DESCRIPTION + " description" + ");";
     //
 
@@ -34,18 +34,17 @@ public class DB {
     private SQLiteDatabase mDB;
     private final Context mCtx;
     private ArrayList<Unswer> get_unswer = new ArrayList<>();
-    ContentValues cv;
+    ContentValues cv = new ContentValues();
     //
 
     // Конструктор
-    public DB(Context mCtx, ArrayList<Unswer> ui) {
-        get_unswer = ui;
+    public DB(Context mCtx) {
+        mDBHelper = new DBHelper(mCtx, DB_NAME, null, DB_VERSION);
         this.mCtx = mCtx;
     }
 
     // Открыть подключение к БД
     public void open() {
-        mDBHelper = new DBHelper(mCtx, DB_NAME, null, DB_VERSION);
         mDB = mDBHelper.getWritableDatabase();
     }
     //
@@ -59,6 +58,14 @@ public class DB {
     // Получить все данные из таблицы DB_TABLE
     public Cursor getAllData() {
         return mDB.query(DB_TABLE, null, null, null, null, null, null);
+    }
+
+    public void write_DB(ArrayList<Unswer> get_unswer){
+        for (Unswer in : get_unswer) {
+            cv.put(COLUMN_TITLE,in.getTitle());
+            cv.put(COLUMN_DESCRIPTION, in.getDescription());
+            mDB.insert(DB_TABLE,null,cv);
+        }
     }
     //
 
@@ -74,12 +81,6 @@ public class DB {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(DB_CREATE);
-            for (Unswer in : get_unswer) {
-                cv.put(COLUMN_ID, Integer.parseInt(String.valueOf(in.getId())));
-                cv.put(COLUMN_TITLE,in.getFirstName());
-                cv.put(COLUMN_DESCRIPTION, in.getUuid());
-                db.insert(DB_TABLE,null,cv);
-            }
         }
 
         @Override

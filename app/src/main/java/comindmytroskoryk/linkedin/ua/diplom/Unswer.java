@@ -6,29 +6,52 @@ import com.google.gson.annotations.SerializedName;
  * Created by Dem on 16.01.2017.
  */
 public class Unswer {
-    @SerializedName("id")
-    private int id;
+
+
     @SerializedName("name")
     private String firstName;
-    @SerializedName("uuid")
-    private String uuid;
-
+    @SerializedName("title")
+    private String title;
+    @SerializedName("groupName")
+    private String groupName;
+    @SerializedName("description")
+    private String description;
 
     @Override
     public String toString() {
         return "Unswer{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", uuid='" + uuid + '\'' +
+                "firstName='" + firstName + '\'' +
+                ", title='" + title + '\'' +
+                ", groupName='" + groupName + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 
-    public int getId() {
-        return id;
+    public String getDescription() {
+        return description;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
+
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     public String getFirstName() {
@@ -39,11 +62,6 @@ public class Unswer {
         this.firstName = firstName;
     }
 
-    public String getUuid() {
-        return uuid;
-    }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
+
 }
