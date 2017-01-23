@@ -1,5 +1,6 @@
 package comindmytroskoryk.linkedin.ua.diplom;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -45,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
     Link link = retrofit.create(Link.class);
 
 
-    DB db;
-    Cursor c;
+    //DB db;
+   // Cursor c;
 
 
 
@@ -60,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
         sGROUP = (Spinner) findViewById(R.id.sGROUPS);
         bLOGIN = (Button)findViewById(R.id.bLOGIN);
 
-        db = new DB(MainActivity.this);
-        db.open();
+        //db = new DB(MainActivity.this);
+       //db.open();
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -89,10 +90,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(retrofit.Response<ArrayList<Unswer>> response, Retrofit retrofit) {
 
-                ui = response.body();
+              //  ui = response.body();
 
-                for (Unswer s : ui) {
-
+                for (Unswer s : response.body()) {
 
                     groups_list.add(String.valueOf(s.getFirstName()));
                 }
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d("LOGO",  " 2 response.body() = " +  API_KEY);
 
-                save_api_key(API_KEY);
+                //save_api_key(API_KEY);
 
                 get_beacons_description(API_KEY);
 
@@ -157,18 +157,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(retrofit.Response<ArrayList<Unswer>> response228, Retrofit retrofit) {
 
-                    Log.d("LOGO", "Get unswer " +  String.valueOf(response228.body()));
-                for (Unswer s:response228.body()) {
+                    //Log.d("LOGO", "Get unswer " +  String.valueOf(response228.body()));
+                for (Unswer s : response228.body()) {
                     if ((sGROUP.getSelectedItem().toString()).equals(s.getGroupName())) {
                         needs.add(s);
+                        Log.d("LOGO", "Get unswer " +  String.valueOf(s));
                     }
 
-                    Log.d("LOGO", "Get unswer " +  String.valueOf(s));
+
                 }
 
+                Intent intent = new Intent(MainActivity.this, Elements_DB.class);
+                intent.putExtra("aboutGROUPS", needs);
+                startActivity(intent);
 
-
-                db.write_DB(needs);
+               // db.write_DB(needs);
 
             }
 
@@ -188,8 +191,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        c.close();
-        db.close();
+       // c.close();
+      //  db.close();
     }
 
 

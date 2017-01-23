@@ -2,10 +2,12 @@ package comindmytroskoryk.linkedin.ua.diplom;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by Dem on 16.01.2017.
  */
-public class Unswer {
+public class Unswer implements Serializable{
 
 
     @SerializedName("name")
