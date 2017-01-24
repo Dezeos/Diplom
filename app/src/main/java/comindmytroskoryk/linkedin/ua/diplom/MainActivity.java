@@ -1,5 +1,6 @@
 package comindmytroskoryk.linkedin.ua.diplom;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.StrictMode;
@@ -29,9 +30,11 @@ public class MainActivity extends AppCompatActivity {
     Button bLOGIN;
     Spinner sGROUP;
 
+
     public static String API_KEY = "";
 
 
+    ProgressDialog pd;
     ArrayList<String> groups_list = new ArrayList<String>();
     ArrayList<Unswer> ui = new ArrayList<Unswer>();
     ArrayList<Unswer> needs = new ArrayList<>();
@@ -76,6 +79,10 @@ public class MainActivity extends AppCompatActivity {
 
                 get_api_key(etEMAIL.getText().toString(),etPASS.getText().toString());
 
+                pd = new ProgressDialog(MainActivity.this);
+                pd.setTitle("Подождите !");
+                pd.setMessage("Идет загрузка данных...");
+                pd.show();
 
             }
         });
@@ -167,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }
 
-                Intent intent = new Intent(MainActivity.this, Elements_DB.class);
+                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
                 intent.putExtra("aboutGROUPS", needs);
                 startActivity(intent);
 
@@ -191,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        pd.dismiss();
        // c.close();
       //  db.close();
     }
