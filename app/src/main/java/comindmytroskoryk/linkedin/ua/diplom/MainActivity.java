@@ -59,13 +59,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
+        //db = new DB(MainActivity.this);
+       //db.open();
+
+
+
+
+
+    }
+
+    @Override
+    protected void onResume() {
+
         etEMAIL = (EditText) findViewById(R.id.etEMAIL);
         etPASS = (EditText) findViewById(R.id.etPASS);
         sGROUP = (Spinner) findViewById(R.id.sGROUPS);
         bLOGIN = (Button)findViewById(R.id.bLOGIN);
-
-        //db = new DB(MainActivity.this);
-       //db.open();
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -73,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         set_spiner_items();
         Log.d("LOGO",  " 1 response.body() = " +  API_KEY);
 
-            bLOGIN.setOnClickListener(new View.OnClickListener() {
+        bLOGIN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -88,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Log.d("LOGO",  " 4 response.body() = " +  API_KEY);
-
+        super.onResume();
     }
 
     public void set_spiner_items(){
@@ -178,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("aboutGROUPS", needs);
                 startActivity(intent);
 
+                pd.dismiss();
                // db.write_DB(needs);
 
             }
@@ -198,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        pd.dismiss();
+
        // c.close();
       //  db.close();
     }

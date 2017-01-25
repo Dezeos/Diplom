@@ -19,7 +19,7 @@
         </activity>
         <activity android:name=".Elements_DB" />
         <activity android:name=".Redact_Activity" />
-
+        <activity android:name=".SecondActivity"></activity>
     </application>
 
 </manifest>

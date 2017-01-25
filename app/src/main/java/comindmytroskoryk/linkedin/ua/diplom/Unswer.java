@@ -10,6 +10,8 @@ import java.io.Serializable;
 public class Unswer implements Serializable{
 
 
+    @SerializedName("id")
+    private String id;
     @SerializedName("name")
     private String firstName;
     @SerializedName("title")
@@ -19,10 +21,19 @@ public class Unswer implements Serializable{
     @SerializedName("description")
     private String description;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "Unswer{" +
-                "firstName='" + firstName + '\'' +
+                "id='" + id + '\'' +
+                ", firstName='" + firstName + '\'' +
                 ", title='" + title + '\'' +
                 ", groupName='" + groupName + '\'' +
                 ", description='" + description + '\'' +
