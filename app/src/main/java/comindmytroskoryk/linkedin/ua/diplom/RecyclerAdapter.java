@@ -93,8 +93,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 Intent intent2 = new Intent( v.getContext(), Redact_Activity.class );
                 intent2.putExtra("Title",title);
                 intent2.putExtra("Description",description);
+                intent2.putExtra("aboutGROUPS",getUNSWER);
                 v.getContext().startActivity(intent2);
                 //Log.d("LOGO", "IMAGEBUTTON " +v.getContext() );
+
             }
         });
         count++;

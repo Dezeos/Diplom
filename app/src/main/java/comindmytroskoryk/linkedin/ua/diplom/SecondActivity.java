@@ -19,29 +19,21 @@ public class SecondActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
+    ArrayList<Unswer> getUNSWER;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
+        Log.d("LOGO", "onCreate" );
 
-    }
-
-
-        public void redactACTIVITY(Unswer uns){
-
-            Intent intent2 = new Intent(SecondActivity.this, Redact_Activity.class);
-            intent2.putExtra("Title",uns.getTitle());
-            intent2.putExtra("Description",uns.getDescription());
-            startActivityForResult(intent2,0);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        ArrayList<Unswer> getUNSWER = (ArrayList<Unswer>) getIntent().getSerializableExtra("aboutGROUPS");
+    protected void onStart() {
+        super.onStart();
+        getUNSWER = (ArrayList<Unswer>) getIntent().getSerializableExtra("aboutGROUPS");
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerAdapter = new RecyclerAdapter(getUNSWER);
 
@@ -50,10 +42,48 @@ public class SecondActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(recyclerAdapter);
 
+
         String title = getIntent().getStringExtra("Title2");
         String desc = getIntent().getStringExtra("Description2");
-        Log.d("LOGO", "IM " +title + " " + desc );
+        Log.d("LOGO", "IM " + title + " " + desc);
+
+
+        Log.d("LOGO", "GOODBYE" + String.valueOf(getUNSWER));
+
+        Log.d("LOGO", "onStart" );
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("LOGO", "onPause " );
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("LOGO", "onStop " );
+        onDestroy();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("LOGO", "onDestroy " );
+    }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("LOGO", "onResume " );
+
+
+
+
+    }
+
 
     /*
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(this,
