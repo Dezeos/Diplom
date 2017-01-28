@@ -33,6 +33,11 @@ public interface Link {
     Call<User> authentication(@Field(value = "Users[email]") String email,
                               @Field(value = "Users[password]") String password);
 
+    @FormUrlEncoded
+    @POST
+    Call<redactSTATUS> redact (@Url String endpoint,
+                       @Field(value = "Beacons[title]") String title,
+                       @Field(value = "Beacons[description]") String description);
 
     @GET
     Call<ArrayList<Unswer>> getGroups(@Url String endpoint);;

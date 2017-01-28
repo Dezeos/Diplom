@@ -28,6 +28,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
     private ArrayList<Unswer> getUNSWER = new ArrayList<>();
+    String API_KEY = "";
     private ViewHolder holder;
     private int count= 1;
 
@@ -58,9 +59,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
     // Конструктор
-    public RecyclerAdapter(ArrayList<Unswer> datasets) {
-
+    public RecyclerAdapter(ArrayList<Unswer> datasets,String key) {
         getUNSWER = datasets;
+        API_KEY = key;
     }
 
 
@@ -94,9 +95,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 intent2.putExtra("Title",title);
                 intent2.putExtra("Description",description);
                 intent2.putExtra("aboutGROUPS",getUNSWER);
+                intent2.putExtra("API_KEY",API_KEY);
                 v.getContext().startActivity(intent2);
                 //Log.d("LOGO", "IMAGEBUTTON " +v.getContext() );
-
+                count = 0;
             }
         });
         count++;

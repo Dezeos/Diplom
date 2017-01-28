@@ -187,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(MainActivity.this, SecondActivity.class);
                 intent.putExtra("aboutGROUPS", needs);
+                intent.putExtra("API_KEY", API_KEY);
                 startActivity(intent);
 
                 pd.dismiss();

@@ -20,6 +20,7 @@ public class SecondActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
     ArrayList<Unswer> getUNSWER;
+    String API_KEY = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +35,9 @@ public class SecondActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         getUNSWER = (ArrayList<Unswer>) getIntent().getSerializableExtra("aboutGROUPS");
+        API_KEY = getIntent().getStringExtra("API_KEY");
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        recyclerAdapter = new RecyclerAdapter(getUNSWER);
+        recyclerAdapter = new RecyclerAdapter(getUNSWER,API_KEY);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
