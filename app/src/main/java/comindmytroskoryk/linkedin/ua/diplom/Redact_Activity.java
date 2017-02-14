@@ -1,5 +1,8 @@
 package comindmytroskoryk.linkedin.ua.diplom;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,6 +33,7 @@ public class Redact_Activity extends AppCompatActivity {
     String title = "";
     String API_KEY = "";
     String groupId = "";
+    final int DIALOG_EXIT = 1;
     private ArrayList<Unswer> getUNSWER = new ArrayList<>();
    // private ArrayList<Unswer> getUNSWER2 = new ArrayList<>();
 
@@ -79,15 +83,16 @@ public class Redact_Activity extends AppCompatActivity {
 
                     }
 
-
-                redactDESCRIPTION(groupId,API_KEY,title,etDESC.getText().toString());
-
                 Intent intent = new Intent(Redact_Activity.this,SecondActivity.class);
                 intent.putExtra("Title2",title);
                 intent.putExtra("Description2", etDESC.getText().toString());
                 intent.putExtra("aboutGROUPS",getUNSWER);
                 intent.putExtra("API_KEY", API_KEY);
-                startActivity(intent);
+
+                redactDESCRIPTION(groupId,API_KEY,title,etDESC.getText().toString(), intent);
+
+
+
                 //setResult(RESULT_OK, intent);
                 //finish();
             }
@@ -95,19 +100,42 @@ public class Redact_Activity extends AppCompatActivity {
         });
     }
 
-    public void redactDESCRIPTION(String beacon_id, String api_key, String title, String description){
+    public void redactDESCRIPTION(String beacon_id, String api_key, final String title, String description, final Intent intent){
 
         Call<redactSTATUS> call = link.redact( "maintain-api/edit?id=" + beacon_id +"&api_key=" + api_key , title , description);
         call.enqueue(new Callback<redactSTATUS>() {
             @Override
             public void onResponse(Response<redactSTATUS> response3, Retrofit retrofit) {
+                startActivity(intent);
                 Log.d("LOGO", "Get Status " +  String.valueOf(response3.message() + response3.code()));
             }
 
             @Override
             public void onFailure(Throwable t) {
-
+                showDialog(DIALOG_EXIT);
             }
         });
     }
+    protected Dialog onCreateDialog(int id) {
+        if (id == DIALOG_EXIT) {
+            AlertDialog.Builder adb = new AlertDialog.Builder(this);
+            // заголовок
+            adb.setTitle("Ошибка");
+            // сообщение
+            adb.setMessage("Отсутствует интернет соединение! Перезапустите приложение!");
+            // иконка
+            adb.setIcon(android.R.drawable.ic_dialog_info);
+            // кнопка положительного ответа
+            adb.setPositiveButton("OK", myClickListener);
+            // создаем диалог
+            return adb.create();
+        }
+        return super.onCreateDialog(id);
+    }
+
+    DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
+            finish();
+        }
+    };
 }

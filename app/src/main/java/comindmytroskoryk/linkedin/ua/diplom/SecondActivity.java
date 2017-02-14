@@ -34,6 +34,35 @@ public class SecondActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        Log.d("LOGO", "onStart" );
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("LOGO", "onPause " );
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("LOGO", "onStop " );
+       // onDestroy();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("LOGO", "onResume " );
         getUNSWER = (ArrayList<Unswer>) getIntent().getSerializableExtra("aboutGROUPS");
         API_KEY = getIntent().getStringExtra("API_KEY");
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -52,34 +81,6 @@ public class SecondActivity extends AppCompatActivity {
 
         Log.d("LOGO", "GOODBYE" + String.valueOf(getUNSWER));
 
-        Log.d("LOGO", "onStart" );
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d("LOGO", "onPause " );
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d("LOGO", "onStop " );
-        onDestroy();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("LOGO", "onDestroy " );
-    }
-
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("LOGO", "onResume " );
 
 
 

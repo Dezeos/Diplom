@@ -1,17 +1,23 @@
 package comindmytroskoryk.linkedin.ua.diplom;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
@@ -29,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     EditText etPASS;
     Button bLOGIN;
     Spinner sGROUP;
+    final int DIALOG_EXIT = 1;
 
 
     public static String API_KEY = "";
@@ -58,16 +65,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
         //db = new DB(MainActivity.this);
        //db.open();
-
-
-
-
-
     }
 
     @Override
@@ -88,13 +87,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                get_api_key(etEMAIL.getText().toString(),etPASS.getText().toString());
+                if((etEMAIL.getText().toString().isEmpty()||etPASS.getText().toString().isEmpty())||(etEMAIL.getText().toString().isEmpty()&&etPASS.getText().toString().isEmpty())){
+                    Log.d("LOGO",  " EMPTY  " );
+                    Toast toast = Toast.makeText(MainActivity.this, "Заполните пустые поля", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                }
+                else {
+                    get_api_key(etEMAIL.getText().toString(), etPASS.getText().toString());
 
-                pd = new ProgressDialog(MainActivity.this);
-                pd.setTitle("Подождите !");
-                pd.setMessage("Идет загрузка данных...");
-                pd.show();
 
+                }
             }
         });
 
@@ -103,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void set_spiner_items(){
+
+
         final Call<ArrayList<Unswer>> call1 = link.getGroups2();
         call1.enqueue(new Callback<ArrayList<Unswer>>() {
             @Override
@@ -121,14 +126,15 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Throwable t) {
-
+                Log.d("LOGO",  " onFailure(Throwable t)  = " +  t.getMessage());
+                showDialog(DIALOG_EXIT);
             }
         });
     }
 
 
     public void set_group_name (ArrayList<String> names){
-        // адаптер для віпадающего списка групп
+        // адаптер для выпадающего списка групп
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,names );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapter.setNotifyOnChange(true);
@@ -138,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         // заголовок списка групп
         spinner.setPrompt("Select the required group");
         // выделяем элемент списка групп  по умолчанию
-        spinner.setSelection(1);
+        spinner.setSelection(0);
     }
 
     public void get_api_key(String email, String password){
@@ -147,19 +153,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(retrofit.Response<User> response, Retrofit retrofit) {
 
-                API_KEY = response.body().getApi_key() ;
+                try {
+                    API_KEY = response.body().getApi_key();
+                    get_beacons_description(API_KEY);
+                    pd = new ProgressDialog(MainActivity.this);
+                    pd.setTitle("Подождите !");
+                    pd.setMessage("Идет загрузка данных...");
+                    pd.show();
+                }
+                catch (NullPointerException np){
+                    Toast toast = Toast.makeText(MainActivity.this, "Введенные некорректные данные! Пользователь не зарегестрированн!", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
 
+                }
                 Log.d("LOGO",  " 2 response.body() = " +  API_KEY);
-
-                //save_api_key(API_KEY);
-
-                get_beacons_description(API_KEY);
 
             }
 
             @Override
             public void onFailure(Throwable t) {
-
+                Log.d("LOGO",  " onFailure228(Throwable t)  = " +  t.getMessage());
+                showDialog(DIALOG_EXIT);
             }
         });
 
@@ -182,7 +197,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("LOGO", "Get unswer " +  String.valueOf(s));
                     }
 
-
                 }
 
                 Intent intent = new Intent(MainActivity.this, SecondActivity.class);
@@ -203,9 +217,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void save_api_key(String api_key){
-        API_KEY = api_key;
-    }
 
 
     @Override
@@ -216,6 +227,30 @@ public class MainActivity extends AppCompatActivity {
       //  db.close();
     }
 
+
+    protected Dialog onCreateDialog(int id) {
+        if (id == DIALOG_EXIT) {
+            AlertDialog.Builder adb = new AlertDialog.Builder(this);
+            // заголовок
+            adb.setTitle("Ошибка");
+            // сообщение
+            adb.setMessage("Отсутствует интернет соединение! Перезапустите приложение!");
+            // иконка
+            adb.setIcon(android.R.drawable.ic_dialog_info);
+            // кнопка положительного ответа
+            adb.setPositiveButton("OK", myClickListener);
+            // создаем диалог
+            return adb.create();
+        }
+        return super.onCreateDialog(id);
+    }
+
+    DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
+            finish();
+
+        }
+    };
 
 
 
