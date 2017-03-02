@@ -10,8 +10,8 @@ import java.io.Serializable;
 public class Unswer implements Serializable{
 
 
-    @SerializedName("groupId")
-    private String groupId;
+    @SerializedName("id")
+    private String Id;
     @SerializedName("name")
     private String firstName;
     @SerializedName("title")
@@ -21,18 +21,11 @@ public class Unswer implements Serializable{
     @SerializedName("description")
     private String description;
 
-    public String getgroupId() {
-        return groupId;
-    }
-
-    public void setgroupId(String id) {
-        this.groupId = groupId;
-    }
 
     @Override
     public String toString() {
         return "Unswer{" +
-                "id='" + groupId + '\'' +
+                "id='" + Id + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", title='" + title + '\'' +
                 ", groupName='" + groupName + '\'' +
@@ -76,5 +69,11 @@ public class Unswer implements Serializable{
     }
 
 
+    public String getId() {
+        return Id;
+    }
 
+    public void setId(String id) {
+        Id = id;
+    }
 }

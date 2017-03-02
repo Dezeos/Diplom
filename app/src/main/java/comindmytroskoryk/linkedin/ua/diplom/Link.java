@@ -18,16 +18,6 @@ public interface Link {
 
 
 
-    /*
-    @FormUrlEncoded
-    @POST("/api/login/")
-    Call<User> authentication(@Field(value = "ClientUsers[email]") String email,
-                              @Field(value = "ClientUsers[password]") String password,
-                              @Field(value = "ClientUsers[group_ids]") String id_group);
-
-
-    */
-
     @FormUrlEncoded
     @POST("/maintain-api/login")
     Call<User> authentication(@Field(value = "Users[email]") String email,
@@ -39,11 +29,12 @@ public interface Link {
                        @Field(value = "Beacons[title]") String title,
                        @Field(value = "Beacons[description]") String description);
 
+
     @GET
-    Call<ArrayList<Unswer>> getGroups(@Url String endpoint);;
+    Call<ArrayList<Unswer>> getAllAboutGroups(@Url String endpoint);;
 
 
     @GET("smart-city/categories")
-    Call<ArrayList<Unswer>> getGroups2();
+    Call<ArrayList<Unswer>> getShortAboutGroups();
 
 }

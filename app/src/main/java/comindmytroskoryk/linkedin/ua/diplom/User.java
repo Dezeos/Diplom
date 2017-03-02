@@ -7,25 +7,24 @@ import com.google.gson.annotations.SerializedName;
  */
 public class User {
 
-
-
-
     @SerializedName("api_key")
-    private String api_key;
+    private String apiKey;
 
+    public String getApiKey() {
 
-    public String getApi_key() {
-        return api_key;
+        return apiKey;
     }
 
-    public void setApi_key(String api_key) {
-        this.api_key = api_key;
+    public void setApiKey(String api_key) {
+
+        this.apiKey = api_key;
+
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "api_key='" + api_key + '\'' +
+                "apiKey='" + apiKey + '\'' +
                 '}';
     }
 

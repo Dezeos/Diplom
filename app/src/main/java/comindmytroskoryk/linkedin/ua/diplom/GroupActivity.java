@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class SecondActivity extends AppCompatActivity {
+public class GroupActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
@@ -64,7 +64,7 @@ public class SecondActivity extends AppCompatActivity {
         super.onResume();
         Log.d("LOGO", "onResume " );
         getUNSWER = (ArrayList<Unswer>) getIntent().getSerializableExtra("aboutGROUPS");
-        API_KEY = getIntent().getStringExtra("API_KEY");
+        API_KEY = getIntent().getStringExtra("apiKey");
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerAdapter = new RecyclerAdapter(getUNSWER,API_KEY);
 
@@ -97,16 +97,16 @@ public class SecondActivity extends AppCompatActivity {
 
 
                 if (view.getId() == R.id.imbSECOND) {
-                    Toast.makeText(SecondActivity.this, "Single Click on position        :" + position,
+                    Toast.makeText(GroupActivity.this, "Single Click on position        :" + position,
                             Toast.LENGTH_SHORT).show();
                 }
-                else  Toast.makeText(SecondActivity.this, "AAAAAAAAAAAAA       :" + position,
+                else  Toast.makeText(GroupActivity.this, "AAAAAAAAAAAAA       :" + position,
                         Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onLongClick(View view, int position) {
-                Toast.makeText(SecondActivity.this, "Long press on position :"+position,
+                Toast.makeText(GroupActivity.this, "Long press on position :"+position,
                         Toast.LENGTH_LONG).show();
             }
         }));

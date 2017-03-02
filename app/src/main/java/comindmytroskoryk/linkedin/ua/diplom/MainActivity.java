@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,143 +30,141 @@ import retrofit.Retrofit;
 public class MainActivity extends AppCompatActivity {
 
 
-    EditText etEMAIL;
-    EditText etPASS;
-    Button bLOGIN;
-    Spinner sGROUP;
+    EditText etEmail;
+    EditText etPass;
+    Button btnLogin;
+    Spinner spinnerGroups;
+
     final int DIALOG_EXIT = 1;
+    private String apiKey = "";
 
 
-    public static String API_KEY = "";
+    ProgressDialog pdWaitDownload;
+    ArrayList<String> listGroups = new ArrayList<String>();
+    ArrayList<Unswer> descriptionGroups = new ArrayList<>();
 
 
-    ProgressDialog pd;
-    ArrayList<String> groups_list = new ArrayList<String>();
-    ArrayList<Unswer> ui = new ArrayList<Unswer>();
-    ArrayList<Unswer> needs = new ArrayList<>();
-
-
-    private static final String URL = "http://labo-pbei.no-ip.org:10001/";
-    private Gson gson = new GsonBuilder().create();
+    private static final String BASE_URL = "http://labo-pbei.no-ip.org:10001/";
+    private Gson gsonConverter = new GsonBuilder().create();
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create(gsonConverter))
             .build();
     Link link = retrofit.create(Link.class);
 
 
-    //DB db;
-   // Cursor c;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //db = new DB(MainActivity.this);
-       //db.open();
+
     }
 
     @Override
     protected void onResume() {
 
-        etEMAIL = (EditText) findViewById(R.id.etEMAIL);
-        etPASS = (EditText) findViewById(R.id.etPASS);
-        sGROUP = (Spinner) findViewById(R.id.sGROUPS);
-        bLOGIN = (Button)findViewById(R.id.bLOGIN);
+        etEmail = (EditText) findViewById(R.id.etEmail);
+        etPass = (EditText) findViewById(R.id.etPass);
+        spinnerGroups = (Spinner) findViewById(R.id.spinnerGroups);
+        btnLogin = (Button)findViewById(R.id.btnLogin);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        set_spiner_items();
-        Log.d("LOGO",  " 1 response.body() = " +  API_KEY);
+        setSpinerItems();
 
-        bLOGIN.setOnClickListener(new View.OnClickListener() {
+        //Log.d("LOGO",  " 1 response.body() = " + apiKey);
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if((etEMAIL.getText().toString().isEmpty()||etPASS.getText().toString().isEmpty())||(etEMAIL.getText().toString().isEmpty()&&etPASS.getText().toString().isEmpty())){
-                    Log.d("LOGO",  " EMPTY  " );
-                    Toast toast = Toast.makeText(MainActivity.this, "Заполните пустые поля", Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
-                }
-                else {
-                    get_api_key(etEMAIL.getText().toString(), etPASS.getText().toString());
+                if((etEmail.getText().toString().isEmpty()|| etPass.getText().toString().isEmpty())||(etEmail.getText().toString().isEmpty()&& etPass.getText().toString().isEmpty())){
 
+                    Toast emptyFields = Toast.makeText(MainActivity.this, "Заполните пустые поля", Toast.LENGTH_LONG);
+                    emptyFields.setGravity(Gravity.CENTER, 0, 0);
+                    emptyFields.show();
+
+                } else {
+
+                    getApiKey(etEmail.getText().toString(), etPass.getText().toString());
 
                 }
             }
         });
 
-        Log.d("LOGO",  " 4 response.body() = " +  API_KEY);
+        //Log.d("LOGO",  " 4 response.body() = " + apiKey);
         super.onResume();
     }
 
-    public void set_spiner_items(){
+    public void setSpinerItems(){
 
-
-        final Call<ArrayList<Unswer>> call1 = link.getGroups2();
+        final Call<ArrayList<Unswer>> call1 = link.getShortAboutGroups();
         call1.enqueue(new Callback<ArrayList<Unswer>>() {
             @Override
             public void onResponse(retrofit.Response<ArrayList<Unswer>> response, Retrofit retrofit) {
 
-              //  ui = response.body();
+                for (Unswer oneUnswerGroup : response.body()) {
 
-                for (Unswer s : response.body()) {
+                    listGroups.add(String.valueOf(oneUnswerGroup.getFirstName()));
 
-                    groups_list.add(String.valueOf(s.getFirstName()));
                 }
 
-                set_group_name(groups_list);
+                setGroupName(listGroups);
 
             }
 
             @Override
             public void onFailure(Throwable t) {
+
                 Log.d("LOGO",  " onFailure(Throwable t)  = " +  t.getMessage());
                 showDialog(DIALOG_EXIT);
+
             }
         });
     }
 
 
-    public void set_group_name (ArrayList<String> names){
+    public void setGroupName(ArrayList<String> names){
+
         // адаптер для выпадающего списка групп
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,names );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapter.setNotifyOnChange(true);
 
-        Spinner spinner = (Spinner) findViewById(R.id.sGROUPS);
-        spinner.setAdapter(adapter);
-        // заголовок списка групп
-        spinner.setPrompt("Select the required group");
-        // выделяем элемент списка групп  по умолчанию
-        spinner.setSelection(0);
+        spinnerGroups.setAdapter(adapter);
+        spinnerGroups.setSelection(0);
+
     }
 
-    public void get_api_key(String email, String password){
+    public void getApiKey(String email, String password){
+
         Call<User> call = link.authentication(email,password);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(retrofit.Response<User> response, Retrofit retrofit) {
 
                 try {
-                    API_KEY = response.body().getApi_key();
-                    get_beacons_description(API_KEY);
-                    pd = new ProgressDialog(MainActivity.this);
-                    pd.setTitle("Подождите !");
-                    pd.setMessage("Идет загрузка данных...");
-                    pd.show();
-                }
-                catch (NullPointerException np){
-                    Toast toast = Toast.makeText(MainActivity.this, "Введенные некорректные данные! Пользователь не зарегестрированн!", Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
+
+                    apiKey = response.body().getApiKey();
+
+                    getBeaconsDescription(apiKey);
+
+                    pdWaitDownload = new ProgressDialog(MainActivity.this);
+                    pdWaitDownload.setTitle("Подождите !");
+                    pdWaitDownload.setMessage("Идет загрузка данных...");
+                    pdWaitDownload.show();
 
                 }
-                Log.d("LOGO",  " 2 response.body() = " +  API_KEY);
+                catch (NullPointerException np){
+
+                    Toast incorrectData = Toast.makeText(MainActivity.this, "Некорректные данные! Пользователь не зарегистрированн!", Toast.LENGTH_LONG);
+                    incorrectData.setGravity(Gravity.CENTER, 0, 0);
+                    incorrectData.show();
+
+                }
+                //Log.d("LOGO",  " 2 response.body() = " + apiKey);
 
             }
 
@@ -178,34 +175,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Log.d("LOGO",  " 3 response.body() = " +  API_KEY);
+       // Log.d("LOGO",  " 3 response.body() = " + apiKey);
 
     }
 
 
-    public void get_beacons_description(String api_key){
+    public void getBeaconsDescription(String api_key){
 
-        Call<ArrayList<Unswer>> call1 = link.getGroups("maintain-api/beacons?api_key=" + api_key);
+        Call<ArrayList<Unswer>> call1 = link.getAllAboutGroups("maintain-api/beacons?api_key=" + api_key);
         call1.enqueue(new Callback<ArrayList<Unswer>>() {
             @Override
             public void onResponse(retrofit.Response<ArrayList<Unswer>> response228, Retrofit retrofit) {
 
                     //Log.d("LOGO", "Get unswer " +  String.valueOf(response228.body()));
-                for (Unswer s : response228.body()) {
-                    if ((sGROUP.getSelectedItem().toString()).equals(s.getGroupName())) {
-                        needs.add(s);
-                        Log.d("LOGO", "Get unswer " +  String.valueOf(s));
+                for (Unswer containGroupsInfo : response228.body()) {
+                    if ((spinnerGroups.getSelectedItem().toString()).equals(containGroupsInfo.getGroupName())) {
+                        descriptionGroups.add(containGroupsInfo);
+                        Log.d("LOGO", "Get unswer " +  String.valueOf(containGroupsInfo));
                     }
 
                 }
 
-                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-                intent.putExtra("aboutGROUPS", needs);
-                intent.putExtra("API_KEY", API_KEY);
+                Intent intent = new Intent(MainActivity.this, GroupActivity.class);
+                intent.putExtra("aboutGROUPS", descriptionGroups);
+                intent.putExtra("apiKey", apiKey);
                 startActivity(intent);
 
-                pd.dismiss();
-               // db.write_DB(needs);
+                pdWaitDownload.dismiss();
+               // db.write_DB(descriptionGroups);
 
             }
 
@@ -229,18 +226,19 @@ public class MainActivity extends AppCompatActivity {
 
 
     protected Dialog onCreateDialog(int id) {
+
         if (id == DIALOG_EXIT) {
-            AlertDialog.Builder adb = new AlertDialog.Builder(this);
+            AlertDialog.Builder errorDialog = new AlertDialog.Builder(this);
             // заголовок
-            adb.setTitle("Ошибка");
+            errorDialog.setTitle("Ошибка");
             // сообщение
-            adb.setMessage("Отсутствует интернет соединение! Перезапустите приложение!");
+            errorDialog.setMessage("Отсутствует интернет соединение!");
             // иконка
-            adb.setIcon(android.R.drawable.ic_dialog_info);
+            errorDialog.setIcon(android.R.drawable.ic_dialog_info);
             // кнопка положительного ответа
-            adb.setPositiveButton("OK", myClickListener);
+            errorDialog.setPositiveButton("OK", myClickListener);
             // создаем диалог
-            return adb.create();
+            return errorDialog.create();
         }
         return super.onCreateDialog(id);
     }
@@ -252,9 +250,4 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-
-
 }
-
-
-
