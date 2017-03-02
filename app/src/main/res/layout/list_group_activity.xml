@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="comindmytroskoryk.linkedin.ua.diplom.Elements_DB"
+
     android:background="#f24f11">
 
     <TextView

@@ -1,5 +1,6 @@
 package comindmytroskoryk.linkedin.ua.diplom;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 /*
 Класс реализует активность с прокручиваемым списком типа RecyclerView
  */
-public class GroupActivity extends AppCompatActivity {
+public class ListGroupActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
@@ -24,7 +25,7 @@ public class GroupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.GroupActivity);
+        setContentView(R.layout.list_group_activity);
 
     }
 
@@ -60,6 +61,14 @@ public class GroupActivity extends AppCompatActivity {
 
         Log.d("LOGO", "GOODBYE" + String.valueOf(unswerFromMain));
 
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        // code here to show dialog
+        //super.onBackPressed();  // optional depending on your needs
+        finish();
     }
 
 }

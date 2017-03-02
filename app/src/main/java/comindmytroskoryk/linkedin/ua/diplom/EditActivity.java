@@ -55,7 +55,7 @@ public class EditActivity extends AppCompatActivity {
     /*
     Метод содержит объявление элементов активности,
     обработку нажатия кнопки с последующей отправкой и сохранением
-    контента на сервере и в GroupActivity
+    контента на сервере и в list_group_activity
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +80,7 @@ public class EditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                btnSave.setClickable(false);
                     for (int i = 0; i < getUnswer.size() ; i++) {
 
                         if (getUnswer.get(i).getTitle().equals(title)){
@@ -89,7 +90,7 @@ public class EditActivity extends AppCompatActivity {
 
                     }
 
-                Intent intent = new Intent(EditActivity.this,GroupActivity.class);
+                Intent intent = new Intent(EditActivity.this,ListGroupActivity.class);
                 intent.putExtra("Title2",title);
                 intent.putExtra("Description2", etDescription.getText().toString());
                 intent.putExtra("aboutGROUPS", getUnswer);
@@ -155,4 +156,5 @@ public class EditActivity extends AppCompatActivity {
             finish();
         }
     };
+
 }

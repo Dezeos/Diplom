@@ -87,12 +87,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                btnLogin.setClickable(false);
 
                 if((etEmail.getText().toString().isEmpty()|| etPass.getText().toString().isEmpty())||(etEmail.getText().toString().isEmpty()&& etPass.getText().toString().isEmpty())){
 
                     Toast emptyFields = Toast.makeText(MainActivity.this, "Заполните пустые поля", Toast.LENGTH_LONG);
                     emptyFields.setGravity(Gravity.CENTER, 0, 0);
                     emptyFields.show();
+                    btnLogin.setClickable(true);
 
                 } else {
 
@@ -182,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast incorrectData = Toast.makeText(MainActivity.this, "Некорректные данные! Пользователь не зарегистрированн!", Toast.LENGTH_LONG);
                     incorrectData.setGravity(Gravity.CENTER, 0, 0);
                     incorrectData.show();
+                    btnLogin.setClickable(true);
 
                 }
                 //Log.d("LOGO",  " 2 response.body() = " + apiKey);
@@ -221,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }
 
-                Intent intent = new Intent(MainActivity.this, GroupActivity.class);
+                Intent intent = new Intent(MainActivity.this, ListGroupActivity.class);
                 intent.putExtra("aboutGROUPS", descriptionGroups);
                 intent.putExtra("apiKey", MainActivity.this.apiKey);
                 startActivity(intent);
@@ -244,9 +247,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-       // c.close();
-      //  db.close();
     }
 
 
@@ -257,6 +257,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == DIALOG_EXIT) {
             AlertDialog.Builder errorDialog = new AlertDialog.Builder(this);
+
+            errorDialog.setCancelable(false);
             // заголовок
             errorDialog.setTitle("Ошибка");
             // сообщение
@@ -264,7 +266,11 @@ public class MainActivity extends AppCompatActivity {
             // иконка
             errorDialog.setIcon(android.R.drawable.ic_dialog_info);
             // кнопка положительного ответа
-            errorDialog.setPositiveButton("OK", myClickListener);
+            errorDialog.setPositiveButton(R.string.btnReload, myClickListener);
+            // кнопка отрицательного ответа
+            errorDialog.setNegativeButton(R.string.btnClose, myClickListener);
+
+
             // создаем диалог
             return errorDialog.create();
         }
@@ -273,9 +279,33 @@ public class MainActivity extends AppCompatActivity {
 
     DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int which) {
+
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    finish();
+                    Intent reloadIntent = getBaseContext().getPackageManager()
+                            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                    reloadIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    reloadIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(reloadIntent);
+
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    finish();
+                    break;
+            }
             finish();
 
         }
     };
+
+
+    @Override
+    public void onBackPressed()
+    {
+        // code here to show dialog
+       // super.onBackPressed();  // optional depending on your needs
+        finish();
+    }
 
 }
