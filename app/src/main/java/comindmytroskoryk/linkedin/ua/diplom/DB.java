@@ -12,6 +12,7 @@ import java.util.ArrayList;
 /**
  * Created by Dem on 16.01.2017.
  */
+/*
 public class DB {
 
     // Переменные для хранения названия БД, таблицы, столбцов, версии БД и строки создания БД
@@ -24,7 +25,7 @@ public class DB {
     public static final String COLUMN_DESCRIPTION = "description";
 
     private static final String DB_CREATE =
-                    "create table " + DB_TABLE + "(" +
+            "create table " + DB_TABLE + "(" +
                     COLUMN_ID + " integer primary key autoincrement, " +
                     COLUMN_TITLE + " title, " + COLUMN_DESCRIPTION + " description" + ");";
     //
@@ -51,7 +52,7 @@ public class DB {
 
     // Закрыть подключение
     public void close() {
-        if (mDBHelper!=null) mDBHelper.close();
+        if (mDBHelper != null) mDBHelper.close();
     }
     //
 
@@ -60,14 +61,16 @@ public class DB {
         return mDB.query(DB_TABLE, null, null, null, null, null, null);
     }
 
-    public void write_DB(ArrayList<Unswer> get_unswer){
+    public void write_DB(ArrayList<Unswer> get_unswer) {
         for (Unswer in : get_unswer) {
-            cv.put(COLUMN_TITLE,in.getTitle());
+            cv.put(COLUMN_TITLE, in.getTitle());
             cv.put(COLUMN_DESCRIPTION, in.getDescription());
-            mDB.insert(DB_TABLE,null,cv);
+            mDB.insert(DB_TABLE, null, cv);
         }
     }
     //
+
+
 
     // Вложенный класс по созданию и управлению БД
     private class DBHelper extends SQLiteOpenHelper {
@@ -89,3 +92,4 @@ public class DB {
     }
     //
 }
+*/

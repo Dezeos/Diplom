@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Elements_DB" />
-        <activity android:name=".Redact_Activity" />
+        <activity android:name=".EditActivity" />
         <activity android:name=".GroupActivity"></activity>
     </application>
 

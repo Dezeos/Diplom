@@ -26,7 +26,9 @@ import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 
 
-
+/*
+Класс реализует главную активность для аутентификации пользователя
+ */
 public class MainActivity extends AppCompatActivity {
 
 
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Unswer> descriptionGroups = new ArrayList<>();
 
 
-    private static final String BASE_URL = "http://labo-pbei.no-ip.org:10001/";
+    public static final String BASE_URL = "http://labo-pbei.no-ip.org:10001/";
     private Gson gsonConverter = new GsonBuilder().create();
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -61,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /*
+    Метод содержит объявление элементов активности,
+    формирование списка групп с помощью метода setSpinerItems(),
+    обработку нажатия кнопки.
+    */
     @Override
     protected void onResume() {
 
@@ -80,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
                 if((etEmail.getText().toString().isEmpty()|| etPass.getText().toString().isEmpty())||(etEmail.getText().toString().isEmpty()&& etPass.getText().toString().isEmpty())){
 
                     Toast emptyFields = Toast.makeText(MainActivity.this, "Заполните пустые поля", Toast.LENGTH_LONG);
@@ -98,6 +106,11 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
     }
 
+
+    /*
+    Метод реализует запрос на сервер для получения описания групп и обработку ответа
+    с последующим сохранением его в список и передачей в setGroupName().
+    */
     public void setSpinerItems(){
 
         final Call<ArrayList<Unswer>> call1 = link.getShortAboutGroups();
@@ -126,10 +139,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void setGroupName(ArrayList<String> names){
+    /*
+    Метод реализует заполнение списка именами групп, полученными от setSpinerItems();
+     */
+    public void setGroupName(ArrayList<String> groupsNames){
 
         // адаптер для выпадающего списка групп
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,names );
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, groupsNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapter.setNotifyOnChange(true);
 
@@ -138,6 +154,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /*
+    Метод реализует запрос на сервер для получения API KEYя зарегестрированного пользователя,
+    вызов метода getBeaconsDescription(), запуск прогресс-бара.
+     */
     public void getApiKey(String email, String password){
 
         Call<User> call = link.authentication(email,password);
@@ -180,9 +200,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void getBeaconsDescription(String api_key){
+    /*
+    Метод реализует запрос полного содержания полей всех групп, исходя из полученного API KEYя пользователя,
+    отбор и сохранение информации для выбранной пользователем группы из списка,
+    вызов следующей активности и передачу отобранной информации
+     */
+    public void getBeaconsDescription(String apiKey){
 
-        Call<ArrayList<Unswer>> call1 = link.getAllAboutGroups("maintain-api/beacons?api_key=" + api_key);
+        Call<ArrayList<Unswer>> call1 = link.getAllAboutGroups("maintain-api/beacons?api_key=" + apiKey);
         call1.enqueue(new Callback<ArrayList<Unswer>>() {
             @Override
             public void onResponse(retrofit.Response<ArrayList<Unswer>> response228, Retrofit retrofit) {
@@ -198,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(MainActivity.this, GroupActivity.class);
                 intent.putExtra("aboutGROUPS", descriptionGroups);
-                intent.putExtra("apiKey", apiKey);
+                intent.putExtra("apiKey", MainActivity.this.apiKey);
                 startActivity(intent);
 
                 pdWaitDownload.dismiss();
@@ -225,6 +250,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /*
+    Метод реализует формирование диалога, когда отсутствует интернет-соединение
+     */
     protected Dialog onCreateDialog(int id) {
 
         if (id == DIALOG_EXIT) {

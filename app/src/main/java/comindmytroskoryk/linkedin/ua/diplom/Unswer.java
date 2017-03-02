@@ -4,14 +4,16 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-/**
- * Created by Dem on 16.01.2017.
- */
+/*
+Класс реализует обработку ответа сервера,
+в котором содержиться все поля маяков выбранной
+пользователем группы
+*/
 public class Unswer implements Serializable{
 
 
     @SerializedName("id")
-    private String Id;
+    private String id;
     @SerializedName("name")
     private String firstName;
     @SerializedName("title")
@@ -25,7 +27,7 @@ public class Unswer implements Serializable{
     @Override
     public String toString() {
         return "Unswer{" +
-                "id='" + Id + '\'' +
+                "id='" + id + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", title='" + title + '\'' +
                 ", groupName='" + groupName + '\'' +
@@ -70,10 +72,10 @@ public class Unswer implements Serializable{
 
 
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
     }
 }

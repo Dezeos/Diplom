@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="comindmytroskoryk.linkedin.ua.diplom.Redact_Activity"
+    tools:context=".EditActivity"
     android:background="#f24f11">
 
     <TextView

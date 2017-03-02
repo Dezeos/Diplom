@@ -7,15 +7,12 @@ import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-
+/*
 public class Elements_DB extends AppCompatActivity {
 
     private static final String TAG = "MyAppPP";
@@ -61,7 +58,7 @@ public class Elements_DB extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, String.valueOf(v.getId()));
-                    Intent intent2 = new Intent(Elements_DB.this, Redact_Activity.class);
+                    Intent intent2 = new Intent(Elements_DB.this, EditActivity.class);
                     intent2.putExtra("Description",tvTITLE.getText().toString());
                     startActivityForResult(intent2,0);
                 }
@@ -83,5 +80,5 @@ public class Elements_DB extends AppCompatActivity {
 
 }
 
-
+*/
 

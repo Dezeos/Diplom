@@ -2,10 +2,10 @@ package comindmytroskoryk.linkedin.ua.diplom;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by Dem on 28.01.2017.
+/*
+Класс для обработки сообщения о статусе сохранения редактированного контента на сервере
  */
-public class redactSTATUS {
+public class StatusResult {
 
     @SerializedName("status")
     private String status;
@@ -20,7 +20,7 @@ public class redactSTATUS {
 
     @Override
     public String toString() {
-        return "redactSTATUS{" +
+        return "StatusResult{" +
                 "status='" + status + '\'' +
                 '}';
     }
