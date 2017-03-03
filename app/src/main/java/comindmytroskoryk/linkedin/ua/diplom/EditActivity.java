@@ -95,11 +95,6 @@ public class EditActivity extends AppCompatActivity {
                 pdWaitDownload = new ProgressDialog(EditActivity.this);
                 pdWaitDownload.setTitle("Подождите !");
                 pdWaitDownload.setMessage("Идет загрузка данных...");
-                try {
-                    TimeUnit.SECONDS.sleep(5);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 pdWaitDownload.show();
 
                     for (int i = 0; i < getUnswer.size() ; i++) {
@@ -153,6 +148,7 @@ public class EditActivity extends AppCompatActivity {
             @Override
             public void onResponse(Response<StatusResult> response3, Retrofit retrofit) {
                 startActivity(intent);
+                pdWaitDownload.dismiss();
                 Log.d("LOGO", "Get Status " +  String.valueOf(response3.message() + response3.code()));
             }
 
@@ -199,6 +195,6 @@ public class EditActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         btnSave.setClickable(true);
-        pdWaitDownload.dismiss();
+
     }
 }

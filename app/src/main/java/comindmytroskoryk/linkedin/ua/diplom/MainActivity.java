@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.StrictMode;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPass = (EditText) findViewById(R.id.etPass);
         spinnerGroups = (Spinner) findViewById(R.id.spinnerGroups);
-        btnLogin = (Button)findViewById(R.id.btnLogin);
+        btnLogin = (Button) findViewById(R.id.btnLogin);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
                 btnLogin.setClickable(false);
 
-                if((etEmail.getText().toString().isEmpty()|| etPass.getText().toString().isEmpty())||(etEmail.getText().toString().isEmpty()&& etPass.getText().toString().isEmpty())){
+                if ((etEmail.getText().toString().isEmpty() || etPass.getText().toString().isEmpty()) || (etEmail.getText().toString().isEmpty() && etPass.getText().toString().isEmpty())) {
 
                     Toast emptyFields = Toast.makeText(MainActivity.this, "Заполните пустые поля", Toast.LENGTH_LONG);
                     emptyFields.setGravity(Gravity.CENTER, 0, 0);
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     Метод реализует запрос на сервер для получения описания групп и обработку ответа
     с последующим сохранением его в список и передачей в setGroupName().
     */
-    public void setSpinerItems(){
+    public void setSpinerItems() {
 
         final Call<ArrayList<Unswer>> call1 = link.getShortAboutGroups();
         call1.enqueue(new Callback<ArrayList<Unswer>>() {
@@ -133,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Throwable t) {
 
-                Log.d("LOGO",  " onFailure(Throwable t)  = " +  t.getMessage());
+                Log.d("LOGO", " onFailure(Throwable t)  = " + t.getMessage());
                 showDialog(DIALOG_EXIT);
 
             }
@@ -144,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
     /*
     Метод реализует заполнение списка именами групп, полученными от setSpinerItems();
      */
-    public void setGroupName(ArrayList<String> groupsNames){
+    public void setGroupName(ArrayList<String> groupsNames) {
 
         // адаптер для выпадающего списка групп
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, groupsNames);
@@ -160,9 +161,9 @@ public class MainActivity extends AppCompatActivity {
     Метод реализует запрос на сервер для получения API KEYя зарегестрированного пользователя,
     вызов метода getBeaconsDescription(), запуск прогресс-бара.
      */
-    public void getApiKey(String email, String password){
+    public void getApiKey(String email, String password) {
 
-        Call<User> call = link.authentication(email,password);
+        Call<User> call = link.authentication(email, password);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(retrofit.Response<User> response, Retrofit retrofit) {
@@ -178,8 +179,7 @@ public class MainActivity extends AppCompatActivity {
                     pdWaitDownload.setMessage("Идет загрузка данных...");
                     pdWaitDownload.show();
 
-                }
-                catch (NullPointerException np){
+                } catch (NullPointerException np) {
 
                     Toast incorrectData = Toast.makeText(MainActivity.this, "Некорректные данные! Пользователь не зарегистрированн!", Toast.LENGTH_LONG);
                     incorrectData.setGravity(Gravity.CENTER, 0, 0);
@@ -193,12 +193,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Throwable t) {
-                Log.d("LOGO",  " onFailure228(Throwable t)  = " +  t.getMessage());
+                Log.d("LOGO", " onFailure228(Throwable t)  = " + t.getMessage());
                 showDialog(DIALOG_EXIT);
             }
         });
 
-       // Log.d("LOGO",  " 3 response.body() = " + apiKey);
+        // Log.d("LOGO",  " 3 response.body() = " + apiKey);
 
     }
 
@@ -208,18 +208,18 @@ public class MainActivity extends AppCompatActivity {
     отбор и сохранение информации для выбранной пользователем группы из списка,
     вызов следующей активности и передачу отобранной информации
      */
-    public void getBeaconsDescription(String apiKey){
+    public void getBeaconsDescription(String apiKey) {
 
         Call<ArrayList<Unswer>> call1 = link.getAllAboutGroups("maintain-api/beacons?api_key=" + apiKey);
         call1.enqueue(new Callback<ArrayList<Unswer>>() {
             @Override
             public void onResponse(retrofit.Response<ArrayList<Unswer>> response228, Retrofit retrofit) {
 
-                    //Log.d("LOGO", "Get unswer " +  String.valueOf(response228.body()));
+                //Log.d("LOGO", "Get unswer " +  String.valueOf(response228.body()));
                 for (Unswer containGroupsInfo : response228.body()) {
                     if ((spinnerGroups.getSelectedItem().toString()).equals(containGroupsInfo.getGroupName())) {
                         descriptionGroups.add(containGroupsInfo);
-                        Log.d("LOGO", "Get unswer " +  String.valueOf(containGroupsInfo.getDescription()));
+                        Log.d("LOGO", "Get unswer " + String.valueOf(containGroupsInfo.getDescription()));
                     }
 
                 }
@@ -229,8 +229,9 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("apiKey", MainActivity.this.apiKey);
                 startActivity(intent);
 
+                pdWaitDownload.dismiss();
                 //pdWaitDownload.dismiss();
-               // db.write_DB(descriptionGroups);
+                // db.write_DB(descriptionGroups);
 
             }
 
@@ -243,10 +244,10 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
     }
 
 
@@ -280,11 +281,11 @@ public class MainActivity extends AppCompatActivity {
     DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int which) {
 
-            switch (which){
+            switch (which) {
                 case DialogInterface.BUTTON_NEGATIVE:
                     finish();
                     Intent reloadIntent = getBaseContext().getPackageManager()
-                            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                            .getLaunchIntentForPackage(getBaseContext().getPackageName());
                     reloadIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     reloadIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(reloadIntent);
@@ -301,16 +302,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         // code here to show dialog
-       // super.onBackPressed();  // optional depending on your needs
+        // super.onBackPressed();  // optional depending on your needs
         finish();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        pdWaitDownload.dismiss();
-    }
 }
+
