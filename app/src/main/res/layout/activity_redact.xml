@@ -33,14 +33,42 @@
                 android:gravity="center"
                 android:layout_margin="10dp" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/bSAVE"
-                android:id="@+id/bSAVE"
-                android:background="@drawable/edt"
-                android:layout_gravity="center_horizontal" />
+                <LinearLayout
+                    android:id="@+id/llSEL2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bSAVE"
+                        android:layout_marginLeft="20dp"
+                        android:gravity="center"
+                        android:id="@+id/bSAVE"
+                        android:background="@drawable/edt"
+                        android:layout_margin="10dp" />
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:gravity="center"
+                        android:text="@string/bPREVIEW"
+                        android:id="@+id/bPREVIEW"
+                        android:background="@drawable/edt"
+                        android:layout_margin="10dp" />
 
+                </LinearLayout>
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/PreView"
+                android:background="@drawable/edt"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvPreView"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
