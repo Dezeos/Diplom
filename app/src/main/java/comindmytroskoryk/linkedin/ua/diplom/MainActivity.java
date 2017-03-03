@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
                 for (Unswer containGroupsInfo : response228.body()) {
                     if ((spinnerGroups.getSelectedItem().toString()).equals(containGroupsInfo.getGroupName())) {
                         descriptionGroups.add(containGroupsInfo);
-                        Log.d("LOGO", "Get unswer " +  String.valueOf(containGroupsInfo));
+                        Log.d("LOGO", "Get unswer " +  String.valueOf(containGroupsInfo.getDescription()));
                     }
 
                 }
@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("apiKey", MainActivity.this.apiKey);
                 startActivity(intent);
 
-                pdWaitDownload.dismiss();
+                //pdWaitDownload.dismiss();
                // db.write_DB(descriptionGroups);
 
             }
@@ -266,9 +266,9 @@ public class MainActivity extends AppCompatActivity {
             // иконка
             errorDialog.setIcon(android.R.drawable.ic_dialog_info);
             // кнопка положительного ответа
-            errorDialog.setPositiveButton(R.string.btnReload, myClickListener);
+            errorDialog.setPositiveButton(R.string.btnClose, myClickListener);
             // кнопка отрицательного ответа
-            errorDialog.setNegativeButton(R.string.btnClose, myClickListener);
+            errorDialog.setNegativeButton(R.string.btnReload, myClickListener);
 
 
             // создаем диалог
@@ -281,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(DialogInterface dialog, int which) {
 
             switch (which){
-                case DialogInterface.BUTTON_POSITIVE:
+                case DialogInterface.BUTTON_NEGATIVE:
                     finish();
                     Intent reloadIntent = getBaseContext().getPackageManager()
                             .getLaunchIntentForPackage( getBaseContext().getPackageName() );
@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(reloadIntent);
 
                     break;
-                case DialogInterface.BUTTON_NEGATIVE:
+                case DialogInterface.BUTTON_POSITIVE:
                     finish();
                     break;
             }
@@ -308,4 +308,9 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        pdWaitDownload.dismiss();
+    }
 }

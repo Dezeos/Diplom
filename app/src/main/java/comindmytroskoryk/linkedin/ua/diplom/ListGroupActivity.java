@@ -40,7 +40,7 @@ public class ListGroupActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        Log.d("LOGO", "onResume " );
+       // Log.d("LOGO", "onResume " );
 
         unswerFromMain = (ArrayList<Unswer>) getIntent().getSerializableExtra("aboutGROUPS");
         apiKey = getIntent().getStringExtra("apiKey");
@@ -57,9 +57,9 @@ public class ListGroupActivity extends AppCompatActivity {
         String title = getIntent().getStringExtra("Title2");
         String desc = getIntent().getStringExtra("Description2");
 
-        Log.d("LOGO", "IM " + title + " " + desc);
+        //Log.d("LOGO", "IM " + title + " " + desc);
 
-        Log.d("LOGO", "GOODBYE" + String.valueOf(unswerFromMain));
+        Log.d("LOGO", "Заполение полей " + String.valueOf(unswerFromMain));
 
     }
 

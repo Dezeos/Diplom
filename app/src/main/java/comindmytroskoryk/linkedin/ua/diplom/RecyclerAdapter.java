@@ -2,6 +2,7 @@ package comindmytroskoryk.linkedin.ua.diplom;
 
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -91,7 +92,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         holder.tvPOS.setText(String.valueOf(count));
         holder.tvNAME.setText(UNSWER.getTitle());
-        holder.tvDESCR.setText(Html.fromHtml(UNSWER.getDescription()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            holder.tvDESCR.setText(Html.fromHtml(UNSWER.getDescription(),Html.FROM_HTML_MODE_LEGACY));
+        }
+        else {
+            holder.tvDESCR.setText(Html.fromHtml(UNSWER.getDescription()));
+        }
         holder.imbSECOND.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

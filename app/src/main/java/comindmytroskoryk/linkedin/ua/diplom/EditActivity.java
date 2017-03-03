@@ -2,8 +2,10 @@ package comindmytroskoryk.linkedin.ua.diplom;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -16,7 +18,9 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import retrofit.Call;
 import retrofit.Callback;
@@ -30,8 +34,12 @@ import retrofit.Retrofit;
 public class EditActivity extends AppCompatActivity {
 
     TextView tvTitle;
+    TextView tvPreView;
     EditText etDescription;
     Button btnSave;
+    Button btnPreView;
+    ProgressDialog pdWaitDownload;
+
     String description = "";
     String title = "";
     String apiKey = "";
@@ -55,7 +63,8 @@ public class EditActivity extends AppCompatActivity {
     /*
     Метод содержит объявление элементов активности,
     обработку нажатия кнопки с последующей отправкой и сохранением
-    контента на сервере и в list_group_activity
+    контента на сервере и в list_group_activity. Также была добавлена функция предпросмотра
+    редактированного контента
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +73,10 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_redact);
 
         tvTitle = (TextView) findViewById(R.id.tvTITLE);
+        tvPreView = (TextView) findViewById(R.id.tvPreView);
         etDescription = (EditText) findViewById(R.id.etDESC);
         btnSave = (Button) findViewById(R.id.bSAVE);
+        btnPreView = (Button) findViewById(R.id.bPREVIEW);
 
         Intent intent = getIntent();
 
@@ -73,14 +84,24 @@ public class EditActivity extends AppCompatActivity {
         description = intent.getStringExtra("Description");
         getUnswer = (ArrayList<Unswer>) getIntent().getSerializableExtra("aboutGROUPS");
         apiKey = intent.getStringExtra("apiKey");
-
-        etDescription.setText(Html.fromHtml(description));
+                            //Html.fromHtml//
+        etDescription.setText((description));
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 btnSave.setClickable(false);
+                pdWaitDownload = new ProgressDialog(EditActivity.this);
+                pdWaitDownload.setTitle("Подождите !");
+                pdWaitDownload.setMessage("Идет загрузка данных...");
+                try {
+                    TimeUnit.SECONDS.sleep(5);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                pdWaitDownload.show();
+
                     for (int i = 0; i < getUnswer.size() ; i++) {
 
                         if (getUnswer.get(i).getTitle().equals(title)){
@@ -90,16 +111,32 @@ public class EditActivity extends AppCompatActivity {
 
                     }
 
+                Log.d("LOGO", "Промежуточная проверка " + description );
                 Intent intent = new Intent(EditActivity.this,ListGroupActivity.class);
+                //intent.setType("text/html");
                 intent.putExtra("Title2",title);
                 intent.putExtra("Description2", etDescription.getText().toString());
                 intent.putExtra("aboutGROUPS", getUnswer);
                 intent.putExtra("apiKey", apiKey);
-
-                redactDescription(beaconsId, apiKey,title, etDescription.getText().toString(), intent);
+                redactDescription(beaconsId, apiKey,title, etDescription.getText().toString() , intent);
 
             }
 
+        });
+
+        btnPreView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                description = etDescription.getText().toString();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    tvPreView.setText(Html.fromHtml(description,Html.FROM_HTML_MODE_LEGACY));
+                }
+                else {
+                    tvPreView.setText(Html.fromHtml(description));
+                }
+
+            }
         });
     }
 
@@ -110,6 +147,7 @@ public class EditActivity extends AppCompatActivity {
      */
     public void redactDescription(String beaconId, String apiKey, final String title, String description, final Intent intent){
 
+        Log.d("LOGO", "Отправка на сервер " + description );
         Call<StatusResult> call = link.redact( "maintain-api/edit?id=" + beaconId +"&api_key=" + apiKey , title , description);
         call.enqueue(new Callback<StatusResult>() {
             @Override
@@ -157,4 +195,10 @@ public class EditActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        btnSave.setClickable(true);
+        pdWaitDownload.dismiss();
+    }
 }
