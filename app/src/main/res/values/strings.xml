@@ -6,9 +6,11 @@
     <string name="tvGROUP">group</string>
     <string name="btnLOGIN">LOGIN</string>
     <string name="tvGroupBeacons">Group Beacons :</string>
-    <string name="bSAVE">SAVE</string>
+    <string name="bSAVE">Save</string>
+    <string name="bPREVIEW">PreView</string>
     <string name="btnReload">Перезагрузить</string>
     <string name="btnClose">Закрыть</string>
+    <string name="PreView">Нажмите на кнопку PreView для предварительного просмотра</string>
 
 
 </resources>
