@@ -107,6 +107,7 @@ public class EditActivity extends AppCompatActivity {
                     }
 
                 Log.d("LOGO", "Промежуточная проверка " + description );
+                /*
                 Intent intent = new Intent(EditActivity.this,ListGroupActivity.class);
                 //intent.setType("text/html");
                 intent.putExtra("Title2",title);
@@ -114,6 +115,19 @@ public class EditActivity extends AppCompatActivity {
                 intent.putExtra("aboutGROUPS", getUnswer);
                 intent.putExtra("apiKey", apiKey);
                 redactDescription(beaconsId, apiKey,title, etDescription.getText().toString() , intent);
+*/
+                Intent redactIntent = new Intent();
+
+                Bundle redactBundle = new Bundle();
+                redactBundle.putSerializable("aboutGROUPS", getUnswer);
+                redactBundle.putSerializable("apiKey", apiKey);
+                //redactIntent.putExtra("apiKey", apiKey);
+                //redactIntent.putExtra("aboutGROUPS", getUnswer);
+                redactIntent.putExtras(redactBundle);
+
+                redactDescription(beaconsId, apiKey, redactIntent);
+
+                finish();
 
             }
 
@@ -133,6 +147,8 @@ public class EditActivity extends AppCompatActivity {
 
             }
         });
+
+
     }
 
 
@@ -140,14 +156,17 @@ public class EditActivity extends AppCompatActivity {
     Метод реализует запрос на сервер для сохранения данных,
     исходя из ID маячка(НЕ ГРУППЫ!) и  API KEYя польхователя
      */
-    public void redactDescription(String beaconId, String apiKey, final String title, String description, final Intent intent){
+
+    //final String title, String description,
+    public void redactDescription(String beaconId, String apiKey,  final Intent redactIntent){
 
         Log.d("LOGO", "Отправка на сервер " + description );
         Call<StatusResult> call = link.redact( "maintain-api/edit?id=" + beaconId +"&api_key=" + apiKey , title , description);
         call.enqueue(new Callback<StatusResult>() {
             @Override
             public void onResponse(Response<StatusResult> response3, Retrofit retrofit) {
-                startActivity(intent);
+                setResult(RESULT_OK,redactIntent);
+                //startActivity(intent);
                 pdWaitDownload.dismiss();
                 Log.d("LOGO", "Get Status " +  String.valueOf(response3.message() + response3.code()));
             }
@@ -195,6 +214,11 @@ public class EditActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         btnSave.setClickable(true);
+    }
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        finish();
     }
 }

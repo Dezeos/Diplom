@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
     }
 
     /*
@@ -283,28 +284,27 @@ public class MainActivity extends AppCompatActivity {
 
             switch (which) {
                 case DialogInterface.BUTTON_NEGATIVE:
-                    finish();
+                    setSpinerItems();
+                   /* finish();
                     Intent reloadIntent = getBaseContext().getPackageManager()
                             .getLaunchIntentForPackage(getBaseContext().getPackageName());
                     reloadIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     reloadIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(reloadIntent);
+                    startActivity(reloadIntent);*/
 
                     break;
                 case DialogInterface.BUTTON_POSITIVE:
                     finish();
                     break;
             }
-            finish();
+            //finish();
 
         }
     };
 
-
     @Override
     public void onBackPressed() {
-        // code here to show dialog
-        // super.onBackPressed();  // optional depending on your needs
+        //super.onBackPressed();
         finish();
     }
 

@@ -31,19 +31,29 @@ public class ListGroupActivity extends AppCompatActivity {
 
 
 
-    /*
-    Метод предназначен для создания RecyclerView, который формируеться с помощью RecyclerAdapter.
-    Передача в адаптер API KEY и содержимого группы обусловлена тем,
-    что вызов активности для редактирования (RedactActivity) происходит из класса RecyclerAdapter
-    */
+
     @Override
     protected void onResume() {
         super.onResume();
 
-       // Log.d("LOGO", "onResume " );
+
 
         unswerFromMain = (ArrayList<Unswer>) getIntent().getSerializableExtra("aboutGROUPS");
         apiKey = getIntent().getStringExtra("apiKey");
+
+        makingList(unswerFromMain, apiKey);
+
+    }
+
+
+    /*
+  Метод предназначен для создания RecyclerView, который формируеться с помощью RecyclerAdapter.
+  Передача в адаптер API KEY и содержимого группы обусловлена тем,
+  что вызов активности для редактирования (RedactActivity) происходит из класса RecyclerAdapter
+  */
+    public void makingList(ArrayList<Unswer> unswerFromMain, String apiKey){
+
+
 
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerAdapter = new RecyclerAdapter(unswerFromMain, apiKey);
@@ -53,22 +63,29 @@ public class ListGroupActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(recyclerAdapter);
 
-
-        String title = getIntent().getStringExtra("Title2");
-        String desc = getIntent().getStringExtra("Description2");
-
-        //Log.d("LOGO", "IM " + title + " " + desc);
-
-        Log.d("LOGO", "Заполение полей " + String.valueOf(unswerFromMain));
-
+        Log.d("LOGO", "Заполение полей " + String.valueOf(this.unswerFromMain));
     }
+
 
     @Override
     public void onBackPressed()
     {
-        // code here to show dialog
-        //super.onBackPressed();  // optional depending on your needs
+        //super.onBackPressed();
         finish();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+        if (data==null){
+            return;
+        }else {
+
+            Bundle bundle = data.getExtras();
+            unswerFromMain = (ArrayList<Unswer>) bundle.getSerializable("aboutGROUPS");
+            apiKey = (String) bundle.getSerializable("apiKey");
+
+            makingList(unswerFromMain,apiKey);
+        }
+    }
 }
