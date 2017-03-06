@@ -37,14 +37,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         listGroup = listGroupActivity;
     }
 
-
-
     /*
     Метод обновляет контент после редактирования
      */
     public void updateAdapter (ArrayList<Unswer> updateUnswer){
-
-        getUnswer = updateUnswer;
 
         getUnswer.clear();
         getUnswer.addAll(updateUnswer);

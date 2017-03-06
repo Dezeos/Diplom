@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.StrictMode;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     EditText etPass;
     Button btnLogin;
     Spinner spinnerGroups;
+    int position = 0;
 
     final int DIALOG_EXIT = 1;
     private String apiKey = "";
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.setNotifyOnChange(true);
 
         spinnerGroups.setAdapter(adapter);
-        spinnerGroups.setSelection(0);
+        spinnerGroups.setSelection(position);
 
     }
 
@@ -244,10 +244,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        position = spinnerGroups.getSelectedItemPosition();
+        descriptionGroups.clear();
+    }
 
     /*
-    Метод реализует формирование диалога, когда отсутствует интернет-соединение
-     */
+        Метод реализует формирование диалога, когда отсутствует интернет-соединение
+         */
     protected Dialog onCreateDialog(int id) {
 
         if (id == DIALOG_EXIT) {
@@ -286,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+
 
 }
 
