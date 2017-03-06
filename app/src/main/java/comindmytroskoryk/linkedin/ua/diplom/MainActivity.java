@@ -83,13 +83,17 @@ public class MainActivity extends AppCompatActivity {
 
         setSpinerItems();
 
-        //Log.d("LOGO",  " 1 response.body() = " + apiKey);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 btnLogin.setClickable(false);
+
+                pdWaitDownload = new ProgressDialog(MainActivity.this);
+                pdWaitDownload.setTitle("Подождите !");
+                pdWaitDownload.setMessage("Идет загрузка данных...");
+                pdWaitDownload.show();
 
                 if ((etEmail.getText().toString().isEmpty() || etPass.getText().toString().isEmpty()) || (etEmail.getText().toString().isEmpty() && etPass.getText().toString().isEmpty())) {
 
@@ -106,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Log.d("LOGO",  " 4 response.body() = " + apiKey);
         super.onResume();
     }
 
@@ -175,10 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
                     getBeaconsDescription(apiKey);
 
-                    pdWaitDownload = new ProgressDialog(MainActivity.this);
-                    pdWaitDownload.setTitle("Подождите !");
-                    pdWaitDownload.setMessage("Идет загрузка данных...");
-                    pdWaitDownload.show();
+
 
                 } catch (NullPointerException np) {
 
@@ -188,7 +188,6 @@ public class MainActivity extends AppCompatActivity {
                     btnLogin.setClickable(true);
 
                 }
-                //Log.d("LOGO",  " 2 response.body() = " + apiKey);
 
             }
 
@@ -198,8 +197,6 @@ public class MainActivity extends AppCompatActivity {
                 showDialog(DIALOG_EXIT);
             }
         });
-
-        // Log.d("LOGO",  " 3 response.body() = " + apiKey);
 
     }
 
@@ -216,11 +213,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(retrofit.Response<ArrayList<Unswer>> response228, Retrofit retrofit) {
 
-                //Log.d("LOGO", "Get unswer " +  String.valueOf(response228.body()));
                 for (Unswer containGroupsInfo : response228.body()) {
                     if ((spinnerGroups.getSelectedItem().toString()).equals(containGroupsInfo.getGroupName())) {
                         descriptionGroups.add(containGroupsInfo);
-                        Log.d("LOGO", "Get unswer " + String.valueOf(containGroupsInfo.getDescription()));
                     }
 
                 }
@@ -231,8 +226,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
 
                 pdWaitDownload.dismiss();
-                //pdWaitDownload.dismiss();
-                // db.write_DB(descriptionGroups);
 
             }
 
@@ -285,28 +278,14 @@ public class MainActivity extends AppCompatActivity {
             switch (which) {
                 case DialogInterface.BUTTON_NEGATIVE:
                     setSpinerItems();
-                   /* finish();
-                    Intent reloadIntent = getBaseContext().getPackageManager()
-                            .getLaunchIntentForPackage(getBaseContext().getPackageName());
-                    reloadIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    reloadIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(reloadIntent);*/
-
                     break;
                 case DialogInterface.BUTTON_POSITIVE:
                     finish();
                     break;
             }
-            //finish();
 
         }
     };
-
-    @Override
-    public void onBackPressed() {
-        //super.onBackPressed();
-        finish();
-    }
 
 }
 

@@ -2,12 +2,10 @@ package comindmytroskoryk.linkedin.ua.diplom;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,20 +23,35 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     private ArrayList<Unswer> getUnswer = new ArrayList<>();
     private String apiKey = "";
-    public Context listGroupContext;
+    Activity listGroup;
 
-    private ViewHolder holder;
 
 
 
     /*
      Конструктор сохраняет в классе адаптера информацию по группе и API KEY
     */
-    public RecyclerAdapter(ArrayList<Unswer> datasets,String key) {
+    public RecyclerAdapter(ArrayList<Unswer> datasets, String key, ListGroupActivity listGroupActivity) {
         getUnswer = datasets;
         apiKey = key;
+        listGroup = listGroupActivity;
     }
 
+
+
+    /*
+    Метод обновляет контент после редактирования
+     */
+    public void updateAdapter (ArrayList<Unswer> updateUnswer){
+
+        getUnswer = updateUnswer;
+
+        getUnswer.clear();
+        getUnswer.addAll(updateUnswer);
+
+        notifyDataSetChanged();
+
+    }
 
     /*
     Вложенный класс ViewHolder реализует разбиение View элементов из xml файла (example_layout)
@@ -69,12 +82,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     Метод реализует формирование View элемента из  xml файла (example_layout),
     с последующей передачей его конструктору класса ViewHolder
      */
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        listGroupContext = parent.getContext();
-        // Создается один View элемент из xml файла (example_layout)
         View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.example_layout, parent, false);
 
         ViewHolder vh = new ViewHolder(item);
@@ -92,8 +102,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
-        Log.d("LOGO", "final int position!!! " + String.valueOf(position+1));
-
         final Unswer UNSWER = getUnswer.get(position);
         final String TITLE = UNSWER.getTitle();
         final String DESCRIPTION = UNSWER.getDescription();
@@ -109,14 +117,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.imbSECOND.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent( v.getContext(), EditActivity.class );
+                Intent intent2 = new Intent( listGroup, EditActivity.class );
                 intent2.putExtra("Title", TITLE);
                 intent2.putExtra("Description", DESCRIPTION);
                 intent2.putExtra("aboutGROUPS", getUnswer);
                 intent2.putExtra("apiKey", apiKey);
-                //v.getContext().startActivity(intent2);
-                ((Activity) listGroupContext ).startActivityForResult(intent2,1);
-                //v.getContext().startActivity(intent2);
+                listGroup.startActivityForResult(intent2,1);
+
             }
         });
 

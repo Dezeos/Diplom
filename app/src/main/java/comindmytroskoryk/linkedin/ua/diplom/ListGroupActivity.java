@@ -21,6 +21,8 @@ public class ListGroupActivity extends AppCompatActivity {
     ArrayList<Unswer> unswerFromMain;
     private String apiKey = "";
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -35,8 +37,6 @@ public class ListGroupActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-
 
         unswerFromMain = (ArrayList<Unswer>) getIntent().getSerializableExtra("aboutGROUPS");
         apiKey = getIntent().getStringExtra("apiKey");
@@ -53,10 +53,8 @@ public class ListGroupActivity extends AppCompatActivity {
   */
     public void makingList(ArrayList<Unswer> unswerFromMain, String apiKey){
 
-
-
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        recyclerAdapter = new RecyclerAdapter(unswerFromMain, apiKey);
+        recyclerAdapter = new RecyclerAdapter(unswerFromMain, apiKey, ListGroupActivity.this);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -67,25 +65,21 @@ public class ListGroupActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public void onBackPressed()
-    {
-        //super.onBackPressed();
-        finish();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //super.onActivityResult(requestCode, resultCode, data);
+
         if (data==null){
+            Log.d("LOGO", "он активити резалт нет данных" );
             return;
-        }else {
+        } else {
 
-            Bundle bundle = data.getExtras();
-            unswerFromMain = (ArrayList<Unswer>) bundle.getSerializable("aboutGROUPS");
-            apiKey = (String) bundle.getSerializable("apiKey");
+            unswerFromMain = (ArrayList<Unswer>) data.getSerializableExtra("aboutGROUPS");
 
-            makingList(unswerFromMain,apiKey);
+            recyclerAdapter.updateAdapter(unswerFromMain);
+
         }
+
     }
+
 }

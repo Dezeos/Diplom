@@ -18,9 +18,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import retrofit.Call;
 import retrofit.Callback;
@@ -46,7 +44,7 @@ public class EditActivity extends AppCompatActivity {
     String beaconsId = "";
     final int DIALOG_EXIT = 1;
 
-    private ArrayList<Unswer> getUnswer = new ArrayList<>();
+    private ArrayList<Unswer> getListAsk = new ArrayList<>();
 
 
     final String BASE_URL = MainActivity.BASE_URL;
@@ -78,11 +76,11 @@ public class EditActivity extends AppCompatActivity {
         btnSave = (Button) findViewById(R.id.bSAVE);
         btnPreView = (Button) findViewById(R.id.bPREVIEW);
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         title = intent.getStringExtra("Title");
         description = intent.getStringExtra("Description");
-        getUnswer = (ArrayList<Unswer>) getIntent().getSerializableExtra("aboutGROUPS");
+        getListAsk = (ArrayList<Unswer>) getIntent().getSerializableExtra("aboutGROUPS");
         apiKey = intent.getStringExtra("apiKey");
                             //Html.fromHtml//
         etDescription.setText((description));
@@ -92,40 +90,35 @@ public class EditActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 btnSave.setClickable(false);
+                description = etDescription.getText().toString();
+
                 pdWaitDownload = new ProgressDialog(EditActivity.this);
                 pdWaitDownload.setTitle("Подождите !");
                 pdWaitDownload.setMessage("Идет загрузка данных...");
                 pdWaitDownload.show();
 
-                    for (int i = 0; i < getUnswer.size() ; i++) {
+                    for (int i = 0; i < getListAsk.size() ; i++) {
 
-                        if (getUnswer.get(i).getTitle().equals(title)){
-                            getUnswer.get(i).setDescription(String.valueOf( etDescription.getText().toString()));
-                            beaconsId = getUnswer.get(i).getId();
+                        if (getListAsk.get(i).getTitle().equals(title)){
+                            getListAsk.get(i).setDescription(String.valueOf( etDescription.getText().toString()));
+                            beaconsId = getListAsk.get(i).getId();
                         }
 
                     }
 
-                Log.d("LOGO", "Промежуточная проверка " + description );
-                /*
-                Intent intent = new Intent(EditActivity.this,ListGroupActivity.class);
-                //intent.setType("text/html");
-                intent.putExtra("Title2",title);
-                intent.putExtra("Description2", etDescription.getText().toString());
-                intent.putExtra("aboutGROUPS", getUnswer);
-                intent.putExtra("apiKey", apiKey);
-                redactDescription(beaconsId, apiKey,title, etDescription.getText().toString() , intent);
-*/
-                Intent redactIntent = new Intent();
+                Log.d("LOGO", "Отправка в активность " +   apiKey + " "  + getListAsk );
 
-                Bundle redactBundle = new Bundle();
-                redactBundle.putSerializable("aboutGROUPS", getUnswer);
-                redactBundle.putSerializable("apiKey", apiKey);
-                //redactIntent.putExtra("apiKey", apiKey);
-                //redactIntent.putExtra("aboutGROUPS", getUnswer);
-                redactIntent.putExtras(redactBundle);
+
+
+                Intent redactIntent = new Intent();
+                redactIntent.putExtra("apiKey", apiKey);
+                redactIntent.putExtra("aboutGROUPS", getListAsk);
+
+                setResult(RESULT_OK,redactIntent);
 
                 redactDescription(beaconsId, apiKey, redactIntent);
+
+                pdWaitDownload.dismiss();
 
                 finish();
 
@@ -157,7 +150,6 @@ public class EditActivity extends AppCompatActivity {
     исходя из ID маячка(НЕ ГРУППЫ!) и  API KEYя польхователя
      */
 
-    //final String title, String description,
     public void redactDescription(String beaconId, String apiKey,  final Intent redactIntent){
 
         Log.d("LOGO", "Отправка на сервер " + description );
@@ -165,10 +157,9 @@ public class EditActivity extends AppCompatActivity {
         call.enqueue(new Callback<StatusResult>() {
             @Override
             public void onResponse(Response<StatusResult> response3, Retrofit retrofit) {
-                setResult(RESULT_OK,redactIntent);
-                //startActivity(intent);
-                pdWaitDownload.dismiss();
+
                 Log.d("LOGO", "Get Status " +  String.valueOf(response3.message() + response3.code()));
+
             }
 
             @Override
@@ -177,6 +168,7 @@ public class EditActivity extends AppCompatActivity {
             }
         });
     }
+
 
 
     /*
@@ -216,9 +208,4 @@ public class EditActivity extends AppCompatActivity {
         btnSave.setClickable(true);
     }
 
-    @Override
-    public void onBackPressed() {
-        //super.onBackPressed();
-        finish();
-    }
 }
