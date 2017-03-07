@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 btnLogin.setClickable(false);
 
                 pdWaitDownload = new ProgressDialog(MainActivity.this);
+                pdWaitDownload.setCancelable(false);
                 pdWaitDownload.setTitle("Подождите !");
                 pdWaitDownload.setMessage("Идет загрузка данных...");
                 pdWaitDownload.show();
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast emptyFields = Toast.makeText(MainActivity.this, "Заполните пустые поля", Toast.LENGTH_LONG);
                     emptyFields.setGravity(Gravity.CENTER, 0, 0);
                     emptyFields.show();
+                    pdWaitDownload.dismiss();
                     btnLogin.setClickable(true);
 
                 } else {
@@ -182,10 +184,12 @@ public class MainActivity extends AppCompatActivity {
 
                 } catch (NullPointerException np) {
 
+                    pdWaitDownload.dismiss();
                     Toast incorrectData = Toast.makeText(MainActivity.this, "Некорректные данные! Пользователь не зарегистрированн!", Toast.LENGTH_LONG);
                     incorrectData.setGravity(Gravity.CENTER, 0, 0);
                     incorrectData.show();
                     btnLogin.setClickable(true);
+
 
                 }
 
@@ -270,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
             errorDialog.setPositiveButton(R.string.btnClose, myClickListener);
             // кнопка отрицательного ответа
             errorDialog.setNegativeButton(R.string.btnReload, myClickListener);
-
+            pdWaitDownload.dismiss();
 
             // создаем диалог
             return errorDialog.create();
